@@ -1,0 +1,107 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="crossorigin=""/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
+<!--  leaflet old grouped layer js and css library from old application-->
+ <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="crossorigin=""></script>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+
+<!--  leaflet new grouped layer js and css library for growth management start -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+
+<!-- GroupedLayerControl Plugin -->
+<script src="https://cdn.jsdelivr.net/gh/ismyrnow/leaflet-groupedlayercontrol@gh-pages/dist/leaflet.groupedlayercontrol.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ismyrnow/leaflet-groupedlayercontrol@gh-pages/dist/leaflet.groupedlayercontrol.min.css"/>
+<!--  leaflet new grouped layer js and css library for growth management end-->
+<!-- Leaflet.markercluster assets -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css">
+<script src="https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster-src.js"></script>
+
+<!-- Leaflet.FeatureGroup.SubGroup assets -->
+<script src="https://unpkg.com/leaflet.featuregroup.subgroup@1.0.2/dist/leaflet.featuregroup.subgroup.js"></script>
+
+</head>
+<body>
+<div id="mapid" style="width:100%; height:100%" >
+      <span><b>World Wide Map</b></span>
+</div>
+
+</body>
+<script>
+//Load Map and Data
+function formatNumber(num) {
+    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+}
+
+
+var mymap = L.map('mapid');
+var streetmap = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+ maxZoom: 18,
+ attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+ '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+ 'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+ id: 'mapbox/streets-v11',
+ tileSize: 512,
+ zoomOffset: -1
+}).addTo(mymap);
+
+var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
+
+var grayscale   = L.tileLayer(mbUrl, {id: 'mapbox/light-v9', tileSize: 512, zoomOffset: -1, attribution: mbAttr})
+var satellite   = L.tileLayer(mbUrl, {id: 'mapbox/satellite-v9', tileSize: 512, zoomOffset: -1, attribution: mbAttr})
+var info = L.control();
+
+info.onAdd = function (mymap) {
+    this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+    this.update();
+    return this._div;
+};
+info.update = function (props) {
+    this._div.innerHTML = (props ?
+        '<b>' + props.name : '<h1>' + 'Boundary' + '</h1>') +
+    (props ? '<br></b>' + props.desc
+        :  '<h3>Details</h3>');
+};
+
+info.addTo(mymap);
+
+var baseLayers = {
+    "Grayscale": grayscale,
+    "Streets": streetmap,
+    "Satellite": satellite,
+};
+//Add control tab to Map ---------------------------------------------------------------------------------------------------START
+var info = L.control();
+
+info.onAdd = function (mymap) {
+    this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+    this.update();
+    return this._div;
+};
+//Add control tab to Map ---------------------------------------------------------------------------------------------------END
+//Marker cluster
+//==============================Modify Layer Menu==========================================
+var options = {
+    // Make the "Landmarks" group exclusive (use radio inputs)
+    // Show a checkbox next to non-exclusive group labels for toggling all
+    groupCheckboxes: false
+};
+var southWest = new L.LatLng(28.6195712, 77.3554176),
+  northEast = new L.LatLng(15.6195700, 76.3554176),
+  bounds = new L.LatLngBounds(southWest, northEast);
+mymap.fitBounds(bounds);
+
+//==============================Add zoom control==========================================
+function zoomToFeature(e) {
+    mymap.fitBounds(e.target.getBounds());
+}
+//==============================Add created layers to map==========================================
+L.control.groupedLayers(baseLayers,options).addTo(mymap);
+
+
+</script>
+</html>
