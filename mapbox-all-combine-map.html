@@ -51,8 +51,16 @@ var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">
 'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
 mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
 
-var grayscale   = L.tileLayer(mbUrl, {id: 'mapbox/light-v9', tileSize: 512, zoomOffset: -1, attribution: mbAttr})
-var satellite   = L.tileLayer(mbUrl, {id: 'mapbox/satellite-v9', tileSize: 512, zoomOffset: -1, attribution: mbAttr})
+var grayscale   = L.tileLayer(mbUrl, {id: 'mapbox/light-v9', tileSize: 512, zoomOffset: -1, attribution: mbAttr});
+var satellite   = L.tileLayer(mbUrl, {id: 'mapbox/satellite-v9', tileSize: 512, zoomOffset: -1, attribution: mbAttr});
+var satellite_street   = L.tileLayer(mbUrl, {id: 'mapbox/satellite-streets-v12', tileSize: 512, zoomOffset: -1, attribution: mbAttr});
+var dark_night   = L.tileLayer(mbUrl, {id: 'mapbox/dark-v11', tileSize: 512, zoomOffset: -1, attribution: mbAttr});
+var light_v11   = L.tileLayer(mbUrl, {id: 'mapbox/light-v11', tileSize: 512, zoomOffset: -1, attribution: mbAttr});
+var outdoors   = L.tileLayer(mbUrl, {id: 'mapbox/outdoors-v12', tileSize: 512, zoomOffset: -1, attribution: mbAttr});
+var street_v12   = L.tileLayer(mbUrl, {id: 'mapbox/streets-v12', tileSize: 512, zoomOffset: -1, attribution: mbAttr});
+var navigation_day   = L.tileLayer(mbUrl, {id: 'mapbox/navigation-day-v1', tileSize: 512, zoomOffset: -1, attribution: mbAttr});
+var navigation_night   = L.tileLayer(mbUrl, {id: 'mapbox/navigation-night-v1', tileSize: 512, zoomOffset: -1, attribution: mbAttr});
+
 var info = L.control();
 
 info.onAdd = function (mymap) {
@@ -73,7 +81,14 @@ info.addTo(mymap);
 var baseLayers = {
     "Grayscale": grayscale,
     "Streets": streetmap,
-    "Satellite": satellite,
+    "satellite": satellite,
+    "satellite street": satellite_street,
+    "dark night": dark_night,
+    "light v11": light_v11,
+    "outdoors": outdoors,
+    "street v12": street_v12,
+    "navigation day": navigation_day,
+    "navigation night": navigation_night,
 };
 //Add control tab to Map ---------------------------------------------------------------------------------------------------START
 

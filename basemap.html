@@ -63,7 +63,7 @@ info.onAdd = function (mymap) {
 //Add informaion to map------------------------------------------------------------------------------
 info.update = function (props) {
     this._div.innerHTML = (props ?
-        '<b>' + props.name : '<h1>' + 'Boundary' + '</h1>') +
+        '<b>' + props.name : '<h1>' + 'Map Box Map' + '</h1>') +
     (props ? '<br></b>' + props.desc
         :  '<h3>Details</h3>');
 };
@@ -90,8 +90,8 @@ var options = {
     // Show a checkbox next to non-exclusive group labels for toggling all
     groupCheckboxes: false
 };
-var southWest = new L.LatLng(28.6195712, 77.3554176),
-  northEast = new L.LatLng(15.6195700, 76.3554176),
+var southWest = new L.LatLng(35.6195712, 85.3554176),
+  northEast = new L.LatLng(8.6195700, 70.3554176),
   bounds = new L.LatLngBounds(southWest, northEast);
 mymap.fitBounds(bounds);
 
